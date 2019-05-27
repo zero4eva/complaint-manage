@@ -1,0 +1,32 @@
+server:
+  port: 9000
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/
+      suffix: .jsp
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/court?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+
+# 实体类
+mybatis:
+  type-aliases-package: cn.zero4eva.complaint.manage.mapper
+
+# 通用mapper配置
+#mapper:
+#  mappers: cn.zero4eva.complaint.manage.mapper
+#  identity: MYSQL
+
+# 分页插件
+
+
+# 日志
+logging:
+  level:
+    cn.zero4eva.complaint.manage: INFO
+

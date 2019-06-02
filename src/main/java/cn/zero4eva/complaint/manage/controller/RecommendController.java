@@ -1,10 +1,9 @@
 package cn.zero4eva.complaint.manage.controller;
 
-import cn.zero4eva.complaint.manage.pojo.RecommendDO;
-import cn.zero4eva.complaint.manage.pojo.WebPageResult;
-import cn.zero4eva.complaint.manage.service.RecommendService;
+import cn.zero4eva.complaint.manage.model.pojo.RecommendVO;
+import cn.zero4eva.complaint.manage.model.pojo.WebPageResult;
+import cn.zero4eva.complaint.manage.service.LawsuitPredictResultService;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/recommend")
 public class RecommendController {
 
-    @Autowired
-    private RecommendService recommendService;
+    private final LawsuitPredictResultService lawsuitPredictResultService;
+
+    public RecommendController(LawsuitPredictResultService lawsuitPredictResultService) {
+        this.lawsuitPredictResultService = lawsuitPredictResultService;
+    }
 
     /**
      * 查询所有推荐信息并返回指定列表
@@ -34,17 +36,13 @@ public class RecommendController {
      * @param pageSize
      * @return 返回分页后的推荐数据列表
      */
-//    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @GetMapping("/list")
     public ResponseEntity<WebPageResult> queryRecommendList(
             @RequestParam(value = "pageNumber", defaultValue = "1") Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
 
         try {
-            PageInfo<RecommendDO> pageInfo = this.recommendService.listRecommend(pageNumber, pageSize);
-            if (null == pageInfo) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+            PageInfo<RecommendVO> pageInfo = this.lawsuitPredictResultService.listRecommend(pageNumber, pageSize);
             WebPageResult wpr = new WebPageResult(pageInfo.getTotal(), pageInfo.getList());
             return ResponseEntity.ok(wpr);
         } catch (Exception e) {

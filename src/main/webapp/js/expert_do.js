@@ -8,12 +8,12 @@ var caseNum = $('#caseId')
     , details = $('#case-details');
 var form = $('#form-exp');
 
-$(function expertDo(){
+/*$(function expertDo(){
     $.ajax({
         type: "get",
         url: "json/caseInfo.json",
         dataType: "json",
-        success: function (data) {
+        200 : function (data) {
             console.log("caseInfo:", data)
             var caseId = data.caseNumber
                 , caseType = data.criminalCase
@@ -26,51 +26,62 @@ $(function expertDo(){
             judicialProcedure.val(state);
             details.val(caseDetails);
         },
-        error: function () {
-            console.log("error!")
+        500 : function () {
+            alert("Server error!");
         }
     });
-});
+});*/
 
-form.on('submit', function(e){
+form.on('submit', function (e) {
     e.preventDefault();
-    console.log("2",2);
-    $.ajax({ 
+    console.log("expert do");
+    $.ajax({
         type: "put",
         url: "",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(getJsonData()),
-        success: function(data){
-            console.log("exp_do-data：",data);
-            alert("提交成功！");
-        },
-        error: function(){
-            alert("提交失败，请重试！");
+        statusCode: {
+            200: function (data) {
+                console.log("exp_do-data：", data);
+                alert("Modify success!");
+            },
+            404: function () {
+                alert("This case has not been predicted yet!");
+            },
+            500: function () {
+                alert("Server error!");
+            }
         }
     });
 });
 
-function getJsonData(){
+function getJsonData() {
     var c = classification.val()
         , d = danger.val();
     var cd = classification_pro(c) + danger_pro(d);
-    console.log("cd",cd);
+    console.log("cd", cd);
     var cd_data = {"visitLetterLevel": cd};
     return cd_data;
 }
 
-function classification_pro(c){
-    if(c === '信访')
+function classification_pro(c) {
+    if (c === '信访')
         return '0';
     else
         return '1';
 }
 
-function danger_pro(d){
-    switch(d){
-        case '一级': return '1'; break;
-        case '二级': return '2'; break;
-        case '三级': return '3'; break;
+function danger_pro(d) {
+    switch (d) {
+        case '一级':
+            return '1';
+            break;
+        case '二级':
+            return '2';
+            break;
+        case '三级':
+            return '3';
+            break;
     }
 }

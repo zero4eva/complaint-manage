@@ -2,7 +2,8 @@
 var caseNum
     , caseNumInput = $('#casenum')
     , caseNumTrigger = $('#casenum-trigger')
-    , form = $('#search')
+    , form_search = $('#search')
+    , form_predict = $('#predict')
     , pattern = /^\([0-9]{0,4}\)渝[\u4e00-\u9fa50-9a-zA-Z]*$/
     , reg = new RegExp(pattern)
     , caseNumError = $('#casenum-input-error');
@@ -14,7 +15,7 @@ var caseNumber = $('#caseId')
     , danger = $('#danger')
     , details = $('#case-details');
 
-form.on('submit', function (e) {
+form_search.on('submit', function (e) {
     e.preventDefault();
     // console.log("1:", 1);
     caseNum = caseNumInput.val();
@@ -29,29 +30,26 @@ form.on('submit', function (e) {
         dataType: "json",
         data: "caseId=" + caseNum,
         //"name="+$("#name").val()+"&id_card="+$("#id_card").val(),
-        success: function (data) {
-            console.log("caseInfo:", data)
-            var caseId = data.caseNumber
-                , caseType = data.criminalCase
-                , reason = data.registerReason
-                , state = data.judicialProcedure
-                , dangerAndClass = data.visitLetterLevel
-                , caseDetails = data.caseDetails;
-            var dangerAndClass_p = dangerAndClass_pre(dangerAndClass);
-            var cc = dangerAndClass_p[0]
-                , d = dangerAndClass_p[1];
-            var caseClass = caseClassPre(cc)
-                , caseDanger = dangerPre(d);
-            caseNumber.val(caseId);
-            criminalCase.val(caseType);
-            registerReason.val(reason);
-            judicialProcedure.val(state);
-            classification.val(caseClass);
-            danger.val(caseDanger);
-            details.val(caseDetails);
-        },
-        error: function () {
-            console.log("error!")
+        statusCode: {
+            200: function (data) {
+                console.log("caseInfo:", data)
+                var caseId = data.caseNumber
+                    , caseType = data.criminalCase
+                    , reason = data.registerReason
+                    , state = data.judicialProcedure
+                    , caseDetails = data.caseDetails;
+                caseNumber.val(caseId);
+                criminalCase.val(caseType);
+                registerReason.val(reason);
+                judicialProcedure.val(state);
+                details.val(caseDetails);
+            },
+            404: function () {
+                alert("Don't find this case!");
+            },
+            500: function () {
+                alert("Server error!");
+            }
         }
     });
     // }
@@ -61,6 +59,45 @@ form.on('submit', function (e) {
     // }
 });
 
+
+form_predict.on('submit', function (e) {
+    e.preventDefault();
+    // console.log("1:", 1);
+    caseNum = caseNumInput.val();
+    // if (reg.test(caseNum)) {
+    console.log("caseNum:", caseNum);
+    // caseNumError.hide();
+    // alert("valid");
+    $.ajax({
+        type: "get",
+        url: "/case/predict",
+        dataType: "json",
+        data: "caseId=" + caseNum,
+        statusCode: {
+            200: function (data) {
+                console.log("caseInfo:", data)
+                var dangerAndClass_p = dangerAndClass_pre(data.visitLetterLevel);
+                var cc = dangerAndClass_p[0]
+                    , d = dangerAndClass_p[1];
+                var caseClass = caseClassPre(cc)
+                    , caseDanger = dangerPre(d);
+                classification.val(caseClass);
+                danger.val(caseDanger);
+            },
+            409: function () {
+                alert("Predict failed!\nYou can modify it in recommend list manually!");
+            },
+            500: function () {
+                alert("Server error!");
+            }
+        }
+    });
+    // }
+    // else {
+    //     console.log("1:", 1);
+    //     caseNumError.show();
+    // }
+});
 
 function dangerAndClass_pre(s) {
     if (s === '未信访')

@@ -7,19 +7,27 @@ spring:
       prefix: /WEB-INF/
       suffix: .jsp
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/court?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
+  jpa:
+    show-sql: true
 
+predict:
+  python-interpreter-path: D:\\Miniconda2\\envs\\complaint-predict\\python
+  predict-python-file-path: C:\\Users\\Yang\\PycharmProjects\\complaint-predict\\test.py
+  json-file-path: C:\\Users\\Yang\\PycharmProjects\\complaint-predict\\data.json
 
 # 实体类
-mybatis:
-  type-aliases-package: cn.zero4eva.complaint.manage.mapper
+#mybatis:
+#  type-aliases-package: cn.zero4eva.complaint.manage.model
+#  mapper-locations: classpath:repository/*.xml
 
 # 通用mapper配置
-#mapper:
-#  mappers: cn.zero4eva.complaint.manage.mapper
+#repository:
+#  mappers: cn.zero4eva.complaint.manage.repository
 #  identity: MYSQL
 
 # 分页插件

@@ -1,38 +1,41 @@
-package cn.zero4eva.complaint.manage.pojo;
+package cn.zero4eva.complaint.manage.model.entity;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
-/**
- * @ClassName RecommendDO
- * @Description 推荐信息
- * @Author Yang
- * @Date 2019-5-9-0009 15:17
- * @Version 1.0
- **/
-
 @Data
+@Entity
 @Table(name = "tb_lawsuit")
-public class RecommendCaseInfo {
+public class LawsuitDO {
 
     @Id
     private String caseNumber;
 
+    // 法院名称
     private String courtName;
 
+    // 案件类型
     private String criminalCase;
 
+    // 审判程序
     private String judicialProcedure;
 
+    // 结案案由
     private String closeCause;
 
+    // 结案日期
     // TODO modify as closeDate
     private Date sluitingsdatum;
 
+    // 审判官
     private String chiefJudge;
 
-    private String visitLetterLevel;
+    // 案件详情，应该是起诉书
+    @Transient
+    private String caseDetail;
 }

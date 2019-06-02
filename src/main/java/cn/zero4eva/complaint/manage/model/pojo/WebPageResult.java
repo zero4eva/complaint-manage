@@ -1,4 +1,4 @@
-package cn.zero4eva.complaint.manage.pojo;
+package cn.zero4eva.complaint.manage.model.pojo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

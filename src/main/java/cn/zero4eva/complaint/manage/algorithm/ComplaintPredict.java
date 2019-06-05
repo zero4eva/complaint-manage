@@ -10,6 +10,12 @@ public class ComplaintPredict {
 
     private static ObjectMapper MAPPER = new ObjectMapper();
 
+    /**
+     * 将预测所需要的信息转化为json存在文件中
+     *
+     * @param casePredictDTO
+     * @throws IOException
+     */
     public static void generateJsonFile(CasePredictDTO casePredictDTO) throws IOException {
         String dataJson = MAPPER.writeValueAsString(casePredictDTO);
         File file = new File(UrlUtil.jsonFilePath);
@@ -18,6 +24,13 @@ public class ComplaintPredict {
         out.close();
     }
 
+    /**
+     * 调用jian的算法，返回结果
+     *
+     * @param casePredictDTO
+     * @return
+     * @throws IOException
+     */
     public static String predictVisitLetterLevel(CasePredictDTO casePredictDTO) throws IOException {
         ComplaintPredict.generateJsonFile(casePredictDTO);
         String[] arguments = new String[]{UrlUtil.pythonInterpreterPath, UrlUtil.predictPythonFilePath, UrlUtil.jsonFilePath};
@@ -33,6 +46,11 @@ public class ComplaintPredict {
         return result;
     }
 
+    /**
+     * 调用qian的算法，返回结果
+     *
+     * @return
+     */
     public static String predictExperts() {
         return "钱洋";
     }

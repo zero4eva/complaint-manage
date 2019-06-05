@@ -8,8 +8,11 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "predict")
 public class UrlUtil {
 
+    // python解释器地址
     public static String pythonInterpreterPath;
+    // 预测算法文件
     public static String predictPythonFilePath;
+    // 传输的json文件
     public static String jsonFilePath;
 
     @Value("${predict.python-interpreter-path}")

@@ -25,7 +25,7 @@ public class ComplaintDO {
     private String gender;
 
     // 案件类型
-    @Column(name = "lawsuit_criminal_case")
+    @Column(name = "visit_letter_criminal_case")
     private String criminalCase;
 
     // 案件来源

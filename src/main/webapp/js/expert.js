@@ -87,9 +87,9 @@ $(function () {
                 field: 'chiefJudge',
                 align: 'center',
             },
-/*            {
-                title: '当前风险等级',
-                field: 'visitLetterLevel',
+            {
+                title: '推荐专家',
+                field: 'experts',
                 align: 'center',
             },*/
             {

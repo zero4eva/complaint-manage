@@ -20,18 +20,6 @@ predict:
   predict-python-file-path: C:\\Users\\Yang\\PycharmProjects\\complaint-predict\\test.py
   json-file-path: C:\\Users\\Yang\\PycharmProjects\\complaint-predict\\data.json
 
-# 实体类
-#mybatis:
-#  type-aliases-package: cn.zero4eva.complaint.manage.model
-#  mapper-locations: classpath:repository/*.xml
-
-# 通用mapper配置
-#repository:
-#  mappers: cn.zero4eva.complaint.manage.repository
-#  identity: MYSQL
-
-# 分页插件
-
 
 # 日志
 logging:

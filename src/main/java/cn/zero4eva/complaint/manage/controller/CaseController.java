@@ -39,7 +39,6 @@ public class CaseController {
 
 
     /**
-     * 对未被预测的案件
      * 根据案号，预测案件信访等级，而后返回
      *
      * @param caseId
@@ -124,7 +123,7 @@ public class CaseController {
             LawsuitPredictResultDO resultDO = new LawsuitPredictResultDO(caseId).buildVisitLetterLevel(visitLetterLevel);
             boolean updateSuccess = this.lawsuitPredictResultService.updatePredictResult(resultDO);
             if (!updateSuccess) {
-                // 无资源，怎么更新
+                // 无资源404
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
             return ResponseEntity.ok().build();

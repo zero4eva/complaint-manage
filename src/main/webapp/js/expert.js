@@ -9,15 +9,17 @@ $(function () {
                 //json/expert_caseInfo.json
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
-                success: function (msg) {
-                    request.success({
-                        row: msg
-                    });
-                    console.log("tab-info", msg);
-                    $('#table-info').bootstrapTable('load', msg);
-                },
-                error: function () {
-                    alert("错误");
+                statusCode: {
+                    200 : function (msg) {
+                        request.success({
+                            row: msg
+                        });
+                        console.log("tab-info", msg);
+                        $('#table-info').bootstrapTable('load', msg);
+                    },
+                    500 : function () {
+                        alert("Server error!");
+                    }
                 }
             });
         },
@@ -45,7 +47,7 @@ $(function () {
             return {//这里的params是table提供的
                 pageSize: params.pageSize,
                 pageNumber:params.pageNumber
-                //memberId: $("#searchString_id").val() //搜索框内容，可以自动传到后台，搜索在Mybatis,mapper.xml中体现
+                //memberId: $("#searchString_id").val() //搜索框内容，可以自动传到后台，搜索在Mybatis,repository.xml中体现
             };
         },
 
@@ -91,7 +93,8 @@ $(function () {
                 title: '推荐专家',
                 field: 'experts',
                 align: 'center',
-            },*/
+            },
+
             {
                 title: '操作',
                 field: 'courtNumber',
@@ -130,78 +133,55 @@ window.operateEvents1 = {
         // window.location.href = "expert_do?caseNum=" + caseNumber;
         $.ajax({
             type: "get",
-            url: "/case",
+            url: "/case/prediction",
             //json/caseInfo.json
             dataType: "json",
             data:"caseId=" + caseNumber ,
-            success: function (data) {
-                console.log("caseInfo:", data)
-                var caseId = data.caseNumber
-                    , caseType = data.criminalCase
-                    , reason = data.registerReason
-                    , state = data.judicialProcedure
-                    , dangerLevel = data.visitLetterLevel
-                    , caseDetails = data.caseDetails;
-                caseNum.val(caseId);
-                criminalCase.val(caseType);
-                registerReason.val(reason);
-                judicialProcedure.val(state);
-                level.val(dangerLevel);
-                details.val(caseDetails);
-            },
-            error: function () {
-                console.log("error!")
+            statusCode: {
+                200: function (data) {
+                    console.log("caseInfo:", data)
+                    var caseId = data.caseNumber
+                        , caseType = data.criminalCase
+                        , reason = data.registerReason
+                        , state = data.judicialProcedure
+                        , dangerLevel = data.visitLetterLevel
+                        , caseDetails = data.caseDetails;
+                    caseNum.val(caseId);
+                    criminalCase.val(caseType);
+                    registerReason.val(reason);
+                    judicialProcedure.val(state);
+                    level.val(dangerLevel);
+                    details.val(caseDetails);
+                },
+                404: function () {
+                    alert("This case has not been predicted yet!");
+                },
+                500: function () {
+                    alert("Server error!");
+                }
             }
         });
     }
 };
 
-/*$(function expertDo() {
-    var url = window.location.href
-        //console.log("url:", url);
-        , caseNumber = GetUrlPara(url);
-    console.log("num:", caseNumber);
-    $.ajax({
-        type: "get",
-        url: "/case",
-        //json/caseInfo.json
-        dataType: "json",
-        data:"caseId=" + caseNumber ,
-        success: function (data) {
-            console.log("caseInfo:", data)
-            var caseId = data.caseNumber
-                , caseType = data.criminalCase
-                , reason = data.registerReason
-                , state = data.judicialProcedure
-                , caseDetails = data.caseDetails;
-            caseNum.val(caseId);
-            criminalCase.val(caseType);
-            registerReason.val(reason);
-            judicialProcedure.val(state);
-            details.val(caseDetails);
-        },
-        error: function () {
-            console.log("error!")
-        }
-    });
-});*/
-
 form.on('submit', function (e) {
     e.preventDefault();
-    //console.log("2", 2);
     $.ajax({
         type: "put",
         url: "/case",
-        // contentType: "application/json; charset=utf-8",
-        // dataType: "json",
         data: "caseId=" + $('#caseId').val() + "&visitLetterLevel="+ getJsonData(),
-       // "name="+$("#name").val()+"&id_card="+$("#id_card").val(),
-        success: function (data) {
-            console.log("visitLetterLevel:", data);
-            alert("提交成功！");
-        },
-        error: function () {
-            alert("提交失败，请重试！");
+        statusCode: {
+            200: function (data) {
+                console.log("visitLetterLevel:", data);
+                alert("Modify success, Thanks!");
+                window.location.reload();
+            },
+            404: function () {
+                alert("This case has not been predicted yet!");
+            },
+            500: function () {
+                alert("Server error!");
+            }
         }
     });
 });
@@ -217,7 +197,6 @@ function getJsonData() {
     var cd
         , c = classification.val()
         , d = danger.val();
-    // console.log("d", d);
     if (classification_pro(c) === '0') {
         if (danger_pro(d) === '0')
             cd = '普通';
